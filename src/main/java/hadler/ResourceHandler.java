@@ -1,11 +1,14 @@
-package webserver;
+package hadler;
 
 import utils.FileIoUtils;
+import http.HttpRequest;
+import http.HttpResponse;
+import http.MIME;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class ResourceHandler {
+public class ResourceHandler implements Handler{
     public HttpResponse handle(HttpRequest httpRequest) {
         String path = "./static";
         MIME mime = httpRequest.getUri().getExtension().get();

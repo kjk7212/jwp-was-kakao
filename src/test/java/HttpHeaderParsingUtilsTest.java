@@ -1,7 +1,8 @@
 import org.junit.jupiter.api.Test;
-import webserver.HttpHeaderParsingUtils;
-import webserver.HttpMethod;
-import webserver.HttpRequest;
+
+import utils.HttpBodyParser;
+import http.HttpMethod;
+import http.HttpRequest;
 
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class HttpHeaderParsingUtilsTest {
                 "Connection: keep-alive\n" +
                 "Accept: */*";
 
-        HttpRequest httpRequest = HttpHeaderParsingUtils.parse(httpRequestString);
+        HttpRequest httpRequest = HttpBodyParser.HttpHeaderParsingUtils.parse(httpRequestString);
 
         assertThat(httpRequest.getHttpMethod())
                 .isEqualTo(HttpMethod.GET);

@@ -1,6 +1,4 @@
-package webserver;
-
-import exceptions.HttpRequestFormatException;
+package http;
 
 import java.util.Map;
 

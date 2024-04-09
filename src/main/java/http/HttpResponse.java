@@ -1,25 +1,27 @@
-package webserver;
+package http;
 
-import enums.MIME;
-import enums.StatusCode;
+import static constant.Constant.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
 public class HttpResponse {
-    private StatusCode statusCode;
-    private byte[] body;
-    private Map<String, String> headers;
-//    private MIME mime;
+    private final StatusCode statusCode;
+    private final Map<String, String> headers;
+    private final byte[] body;
 
     public static HttpResponse found(String redirectURI) {
         //302일 때 응답 헤더에 필요한 값은??
         return new HttpResponse(StatusCode.FOUND, new byte[0], Map.of("Location", redirectURI));
     }
 
+    public static HttpResponse internalServerError() {
+        return new HttpResponse(StatusCode.INTERNAL_SERVER_ERROR, new byte[0], Map.of());
+    }
+
     public static HttpResponse staticResource(byte[] body, MIME mime) {
-        Map<String, String> headers = Map.of("Content-Type", mime.contentType, "Content-Length", Integer.toString(body.length));
+        Map<String, String> headers = Map.of(HEADER_CONTENT_TYPE, mime.contentType, HEADER_CONTENT_LENGTH, Integer.toString(body.length));
         return new HttpResponse(StatusCode.OK, body, headers);
     }
 
@@ -46,7 +48,7 @@ public class HttpResponse {
 
     private void writeHeader(DataOutputStream dos, String key, String value) throws IOException {
         String string = key + ": " + value;
-        if ("Content-Type".equals(key)) {
+        if (HEADER_CONTENT_TYPE.equals(key)) {
             string += ";charset=utf-8";
         }
         dos.writeBytes(string + "\r\n");

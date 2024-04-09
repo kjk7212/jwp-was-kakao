@@ -1,4 +1,4 @@
-package webserver;
+package http;
 
 public enum MIME {
     HTML("text/html"),
@@ -14,7 +14,7 @@ public enum MIME {
     WOFF2("font/WOFF2"),
     TTF("font/ttf");
 
-    public String contentType;
+    public final String contentType;
 
     MIME(String contentType) {
         this.contentType = contentType;

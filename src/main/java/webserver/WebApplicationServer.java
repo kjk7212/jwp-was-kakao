@@ -6,6 +6,10 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import hadler.APIHandler;
+import hadler.RequestHandler;
+import hadler.ResourceHandler;
+
 public class WebApplicationServer {
     private static final Logger logger = LoggerFactory.getLogger(WebApplicationServer.class);
     private static final int DEFAULT_PORT = 8080;
@@ -25,7 +29,7 @@ public class WebApplicationServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection, new APIHandler(), new ResourceHandler()));
+                Thread thread = new Thread(new RequestHandler(connection));
                 thread.start();
             }
         }

@@ -1,17 +1,12 @@
-package webserver;
+package http;
 
 import exceptions.HttpRequestFormatException;
+import http.MIME;
 
 import java.util.Map;
 import java.util.Optional;
 
 public class URI {
-    public static final String QUERY_SEPARATOR = "?";
-    public static final String PARAMETER_SEPARATOR = "&";
-    public static final String SPACE = " ";
-    public static final String HEADER_SEPARATOR = ": ";
-    public static final String PARAMETER_EQUAL_SIGN = "=";
-    public static final String EXTENSION_SEPARATOR = ".";
 
     private final String path;
     private final Map<String, String> parameters;
@@ -25,6 +20,7 @@ public class URI {
     }
 
     public URI(String path, Map<String, String> parameters, MIME extension) {
+        validatePathFormat(path);
         this.path = path;
         this.parameters = parameters;
         this.extension = Optional.of(extension);

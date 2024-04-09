@@ -1,12 +1,13 @@
 package webserver;
 
 import exceptions.HttpRequestFormatException;
+import http.URI;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class URITest {
     @Test
