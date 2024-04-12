@@ -1,46 +1,44 @@
 package http;
 
 import exceptions.HttpRequestFormatException;
-import http.MIME;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class URI {
+	private static final String EXTENSION_SEPARATOR = ".";
 
-    private final String path;
-    private final Map<String, String> parameters;
-    private final Optional<MIME> extension;
+	private final String path;
+	private final Map<String, String> parameters;
 
-    public URI(String path, Map<String, String> parameters) {
-        validatePathFormat(path);
-        this.path = path;
-        this.parameters = parameters;
-        this.extension = Optional.empty();
-    }
+	public URI(String path, Map<String, String> parameters) {
+		validatePathFormat(path);
+		this.path = path;
+		this.parameters = parameters;
+	}
 
-    public URI(String path, Map<String, String> parameters, MIME extension) {
-        validatePathFormat(path);
-        this.path = path;
-        this.parameters = parameters;
-        this.extension = Optional.of(extension);
-    }
+	private void validatePathFormat(String path) {
+		if (!path.startsWith("/")) {
+			throw new HttpRequestFormatException("uri 형식이 올바르지 않습니다.");
+		}
+	}
 
-    private void validatePathFormat(String path) {
-        if (!path.startsWith("/")) {
-            throw new HttpRequestFormatException("uri 형식이 올바르지 않습니다.");
-        }
-    }
+	public String getPath() {
+		return path;
+	}
 
-    public String getPath() {
-        return path;
-    }
+	public Map<String, String> getParameters() {
+		return parameters;
+	}
 
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
+	public boolean isStaticResource() {
+		return path.contains(EXTENSION_SEPARATOR);
+	}
 
-    public Optional<MIME> getExtension() {
-        return extension;
-    }
+	public MIME getMime() {
+		return MIME.findMimeFromExtension(getExtensionFromPath());
+	}
+
+	private String getExtensionFromPath() {
+		return path.substring(path.lastIndexOf(EXTENSION_SEPARATOR) + 1);
+	}
 }
