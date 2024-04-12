@@ -1,87 +1,83 @@
 package http;
 
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import parser.HttpRequestParser;
 
 public class HttpRequest {
-    private final URI uri;
-    private final HttpMethod httpMethod;
-    private final String protocol;
-    private final Map<String, String> headers;
-    private final Map<String, String> body;
+	private final HttpRequestLine httpRequestLine;
+	private final HttpHeader httpHeader;
+	private final HttpRequestBody httpRequestBody;
 
-    public HttpRequest(URI uri,
-                       HttpMethod httpMethod, String protocol,
-                       Map<String, String> headers,
-                       Map<String, String> body) {
-        this.uri = uri;
-        this.httpMethod = httpMethod;
-        this.protocol = protocol;
-        this.headers = headers;
-        this.body = body;
-    }
+	public HttpRequest(HttpRequestLine httpRequestLine, HttpHeader httpHeader, HttpRequestBody httpRequestBody) {
+		this.httpRequestLine = httpRequestLine;
+		this.httpHeader = httpHeader;
+		this.httpRequestBody = httpRequestBody;
+	}
 
-    private HttpRequest(Builder builder) {
-        this(builder.uri,
-                builder.httpMethod,
-                builder.protocol,
-                builder.headers,
-                builder.body);
-    }
+	public static HttpRequest createHttpRequestFromInputStream(InputStream inputStream) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		HttpRequestParser httpRequestParser = new HttpRequestParser(bufferedReader);
 
-    public static class Builder {
-        private URI uri;
-        private String protocol;
-        private HttpMethod httpMethod;
-        private Map<String, String> headers;
-        private Map<String, String> body;
+		HttpRequestLine httpRequestLine = httpRequestParser.parseHttpRequestLine();
+		HttpHeader httpHeader = httpRequestParser.parseHttpHeader();
 
-        public Builder uri(URI uri) {
-            this.uri = uri;
-            return this;
-        }
+		HttpRequestBody httpRequestBody = httpRequestParser.parseHttpRequestBody(httpHeader);
 
-        public Builder protocol(String protocol) {
-            this.protocol = protocol;
-            return this;
-        }
+		return new HttpRequest(httpRequestLine, httpHeader, httpRequestBody);
+	}
 
-        public Builder httpMethod(HttpMethod httpMethod) {
-            this.httpMethod = httpMethod;
-            return this;
-        }
+	private HttpRequest(Builder builder) {
+		this(builder.httpRequestLine,
+			builder.httpHeader,
+			builder.httpRequestBody);
+	}
 
-        public Builder headers(Map<String, String> headers) {
-            this.headers = headers;
-            return this;
-        }
+	public static class Builder {
+		private HttpRequestLine httpRequestLine;
+		private HttpHeader httpHeader;
+		private HttpRequestBody httpRequestBody;
 
-        public Builder body(Map<String, String> body) {
-            this.body = body;
-            return this;
-        }
+		public Builder httpRequestLine(HttpRequestLine httpRequestLine) {
+			this.httpRequestLine = httpRequestLine;
+			return this;
+		}
 
-        public HttpRequest build() {
-            return new HttpRequest(this);
-        }
-    }
+		public Builder httpHeaders(HttpHeader httpHeader) {
+			this.httpHeader = httpHeader;
+			return this;
+		}
 
-    public URI getUri() {
-        return uri;
-    }
+		public Builder httpBody(HttpRequestBody httpRequestBody) {
+			this.httpRequestBody = httpRequestBody;
+			return this;
+		}
 
-    public HttpMethod getHttpMethod() {
-        return httpMethod;
-    }
+		public HttpRequest build() {
+			return new HttpRequest(this);
+		}
+	}
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
+	public HttpRequestLine getHttpRequestLine() {
+		return httpRequestLine;
+	}
 
-    public String getProtocol() {
-        return protocol;
-    }
+	public HttpHeader getHttpHeaders() {
+		return httpHeader;
+	}
 
-    public Map<String, String> getBody() {
-        return body;
-    }
+	public HttpRequestBody getHttpBody() {
+		return httpRequestBody;
+	}
+
+	public boolean isStaticResource() {
+		return httpRequestLine.isStaticResource();
+	}
+
+	public MIME getMime() {
+		return httpRequestLine.getMime();
+	}
 }

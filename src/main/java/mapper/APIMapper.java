@@ -1,30 +1,36 @@
 package mapper;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import annotations.APIMapping;
-import hadler.APIHandler;
+import handler.APIHandler;
 import http.HttpMethod;
-import webserver.URIHandlerMapping;
 
 public class APIMapper {
-	public static final Map<HttpMethod, URIHandlerMapping> APIMappings;
+	private static final Map<HttpMethod, APIHandlerMapping> APIMappings;
 
 	static {
-		APIMappings = new HashMap<>();
-		for (HttpMethod httpMethod : HttpMethod.values()) {
-			APIMappings.put(httpMethod, new URIHandlerMapping());
-		}
+		APIMappings = Arrays.stream(HttpMethod.values())
+			.collect(Collectors.toMap(Function.identity(), httpMethod -> new APIHandlerMapping()));
 
 		Method[] methods = APIHandler.class.getDeclaredMethods();
 
-		for (Method method : methods) {
-			if (method.isAnnotationPresent(APIMapping.class)) {
-				APIMapping APIMapping = method.getAnnotation(APIMapping.class);
-				APIMappings.get(APIMapping.httpMethod()).addMapping(APIMapping.path(), method);
-			}
-		}
+		Arrays.stream(methods)
+			.filter(method -> method.isAnnotationPresent(APIMapping.class))
+			.map(method -> new AbstractMap.SimpleEntry<>(method.getAnnotation(APIMapping.class), method))
+			.forEach(entry -> APIMappings.get(entry.getKey().httpMethod()).addMapping(entry.getKey().path(), entry.getValue()));
+	}
+
+	public boolean notHasMapping(HttpMethod httpMethod, String path) {
+		return !APIMappings.get(httpMethod).contains(path);
+	}
+
+	public Method getMethod(HttpMethod httpMethod, String path) {
+		return APIMappings.get(httpMethod).find(path);
 	}
 }

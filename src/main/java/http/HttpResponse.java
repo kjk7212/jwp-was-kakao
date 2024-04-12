@@ -1,56 +1,81 @@
 package http;
 
-import static constant.Constant.*;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class HttpResponse {
-    private final StatusCode statusCode;
-    private final Map<String, String> headers;
-    private final byte[] body;
+	private static final String HEADER_CONTENT_LENGTH = "Content-Length";
+	private static final String HEADER_CONTENT_TYPE = "Content-Type";
 
-    public static HttpResponse found(String redirectURI) {
-        //302일 때 응답 헤더에 필요한 값은??
-        return new HttpResponse(StatusCode.FOUND, new byte[0], Map.of("Location", redirectURI));
-    }
+	private final HttpStatus httpStatus;
+	private final HttpHeader httpHeader;
+	private final HttpResponseBody httpResponseBody;
 
-    public static HttpResponse internalServerError() {
-        return new HttpResponse(StatusCode.INTERNAL_SERVER_ERROR, new byte[0], Map.of());
-    }
+	public HttpResponse(HttpStatus httpStatus, HttpHeader httpHeader, HttpResponseBody httpResponseBody) {
+		this.httpStatus = httpStatus;
+		this.httpHeader = httpHeader;
+		this.httpResponseBody = httpResponseBody;
+	}
 
-    public static HttpResponse staticResource(byte[] body, MIME mime) {
-        Map<String, String> headers = Map.of(HEADER_CONTENT_TYPE, mime.contentType, HEADER_CONTENT_LENGTH, Integer.toString(body.length));
-        return new HttpResponse(StatusCode.OK, body, headers);
-    }
+	public static HttpResponse movedPermanently(String redirectURI) {
+		return new HttpResponse(HttpStatus.MOVED_PERMANENTLY, new HttpHeader(Map.of("Location", redirectURI)),
+			new HttpResponseBody());
+	}
 
-    public HttpResponse(StatusCode statusCode, byte[] body, Map<String, String> headers) {
-        this.statusCode = statusCode;
-        this.body = body;
-        this.headers = headers;
-    }
+	public static HttpResponse found(String redirectURI) {
+		return new HttpResponse(HttpStatus.FOUND, new HttpHeader(Map.of("Location", redirectURI)),
+			new HttpResponseBody());
+	}
 
-    public void send(DataOutputStream dos) {
-        try {
-            dos.writeBytes("HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription() + " \r\n");
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                writeHeader(dos, entry.getKey(), entry.getValue());
-            }
-            dos.writeBytes("\r\n");
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            //TODO: 예외처리
-            System.out.println(e.getMessage());
-        }
-    }
+	public static HttpResponse badRequest(String errorMessage) {
+		return new HttpResponse(HttpStatus.BAD_REQUEST, new HttpHeader(), new HttpResponseBody(errorMessage));
+	}
 
-    private void writeHeader(DataOutputStream dos, String key, String value) throws IOException {
-        String string = key + ": " + value;
-        if (HEADER_CONTENT_TYPE.equals(key)) {
-            string += ";charset=utf-8";
-        }
-        dos.writeBytes(string + "\r\n");
-    }
+	public static HttpResponse notFound(String errorMessage) {
+		return new HttpResponse(HttpStatus.NOT_FOUND, new HttpHeader(), new HttpResponseBody(errorMessage));
+	}
+
+	public static HttpResponse conflict(String errorMessage) {
+		return new HttpResponse(HttpStatus.CONFLICT, new HttpHeader(), new HttpResponseBody(errorMessage));
+	}
+
+	public static HttpResponse unsupportedMediaType(String errorMessage) {
+		return new HttpResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE, new HttpHeader(),
+			new HttpResponseBody(errorMessage));
+	}
+
+	public static HttpResponse internalServerError(String errorMessage) {
+		return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, new HttpHeader(), new HttpResponseBody(errorMessage));
+	}
+
+	public static HttpResponse staticResource(HttpResponseBody httpResponseBody, MIME mime) {
+		Map<String, String> headers = Map.of(HEADER_CONTENT_TYPE, mime.contentType, HEADER_CONTENT_LENGTH,
+			Integer.toString(httpResponseBody.getLength()));
+		return new HttpResponse(HttpStatus.OK, new HttpHeader(headers), httpResponseBody);
+	}
+
+	public byte[] makeByteMessage() {
+		StringBuilder header = new StringBuilder(
+			"HTTP/1.1 " + httpStatus.getCode() + " " + httpStatus.getDescription() + " \r\n");
+		httpHeader.getHeader()
+			.forEach((key, value) -> header.append(makeHeaderToString(key, value)));
+		header.append("\r\n");
+
+		byte[] headerByte = header.toString().getBytes(StandardCharsets.UTF_8);
+		byte[] message = new byte[httpResponseBody.getLength() + headerByte.length];
+		System.arraycopy(headerByte, 0, message, 0, headerByte.length);
+		System.arraycopy(httpResponseBody.getBody(), 0, message, headerByte.length, httpResponseBody.getLength());
+
+		return message;
+	}
+
+	private String makeHeaderToString(String key, String value) {
+		String suffix = HEADER_CONTENT_TYPE.equals(key) ? ";charset=utf-8" : "";
+		return key + ": " + value + suffix + "\r\n";
+	}
+
+	public HttpStatus getHttpStatus() {
+		return httpStatus;
+	}
+
 }

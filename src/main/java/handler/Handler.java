@@ -1,4 +1,4 @@
-package hadler;
+package handler;
 
 import http.HttpRequest;
 import http.HttpResponse;
