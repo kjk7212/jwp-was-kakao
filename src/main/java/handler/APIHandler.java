@@ -17,8 +17,8 @@ public class APIHandler implements Handler {
 	private static final APIMapper apiMapper = new APIMapper();
 
 	public HttpResponse handle(HttpRequest httpRequest) {
-		HttpMethod httpMethod = httpRequest.getHttpRequestLine().getHttpMethod();
-		String path = httpRequest.getHttpRequestLine().getPath();
+		HttpMethod httpMethod = httpRequest.getHttpMethod();
+		String path = httpRequest.getPath();
 
 		if (apiMapper.notHasMapping(httpMethod, path)) {
 			return HttpResponse.notFound(EMPTY_ERROR_MESSAGE);
@@ -40,7 +40,7 @@ public class APIHandler implements Handler {
 
 	@APIMapping(path = "/user/create", httpMethod = HttpMethod.POST)
 	public HttpResponse saveUserFromBody(HttpRequest httpRequest) {
-		Map<String, String> parameters = httpRequest.getHttpBody().getBody();
+		Map<String, String> parameters = httpRequest.getHttpBody();
 
 		String name = parameters.get("name");
 		String email = parameters.get("email");

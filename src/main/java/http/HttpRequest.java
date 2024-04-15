@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 import parser.HttpRequestParser;
 
@@ -61,16 +62,24 @@ public class HttpRequest {
 		}
 	}
 
-	public HttpRequestLine getHttpRequestLine() {
-		return httpRequestLine;
+	public HttpMethod getHttpMethod() {
+		return httpRequestLine.getHttpMethod();
 	}
 
-	public HttpHeader getHttpHeaders() {
-		return httpHeader;
+	public String getPath() {
+		return httpRequestLine.getPath();
 	}
 
-	public HttpRequestBody getHttpBody() {
-		return httpRequestBody;
+	public String getProtocol() {
+		return httpRequestLine.getProtocol();
+	}
+
+	public Map<String, String> getHttpHeader() {
+		return httpHeader.getHeader();
+	}
+
+	public Map<String, String> getHttpBody() {
+		return httpRequestBody.getBody();
 	}
 
 	public boolean isStaticResource() {
