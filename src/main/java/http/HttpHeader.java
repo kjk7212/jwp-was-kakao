@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class HttpHeader {
+	private static final String HEADER_CONTENT_TYPE = "Content-Type";
+
 	private static final String HEADER_VALIDATION_ERROR_MESSAGE = "헤더에 잘못 된 값이 들어 있습니다";
 
 	private static final Pattern HEADER_KEY_PATTERN = Pattern.compile("^[a-zA-Z0-9-]+$");
@@ -55,4 +57,19 @@ public class HttpHeader {
 	public String getValueByKey(String key) {
 		return header.get(key);
 	}
+
+	public String makeHeaderLine(){
+		StringBuilder headerLine = new StringBuilder();
+		for (String key : header.keySet()){
+			headerLine.append(makeHeaderToString(key, header.get(key)));
+		}
+
+		return headerLine.toString();
+	}
+
+	private String makeHeaderToString(String key, String value) {
+		String suffix = HEADER_CONTENT_TYPE.equals(key) ? ";charset=utf-8" : "";
+		return key + ": " + value + suffix + "\r\n";
+	}
+
 }
