@@ -35,4 +35,8 @@ public enum HttpStatus {
 	public String getDescription() {
 		return description;
 	}
+
+	public String makeStatusLine(){
+		return "HTTP/1.1 " + this.code + " " + this.description + " \r\n";
+	}
 }
