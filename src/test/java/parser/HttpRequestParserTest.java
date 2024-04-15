@@ -26,17 +26,17 @@ public class HttpRequestParserTest {
         InputStream inputStream = new ByteArrayInputStream(httpRequestString.getBytes(StandardCharsets.UTF_8));
         HttpRequest httpRequest = HttpRequest.createHttpRequestFromInputStream(inputStream);
 
-        assertThat(httpRequest.getHttpRequestLine().getHttpMethod())
+        assertThat(httpRequest.getHttpMethod())
                 .isEqualTo(HttpMethod.GET);
-        assertThat(httpRequest.getHttpBody().getBody())
+        assertThat(httpRequest.getHttpBody())
                 .isEqualTo(Map.of());
-        assertThat(httpRequest.getHttpRequestLine().getPath())
+        assertThat(httpRequest.getPath())
                 .isEqualTo("/index.html");
-        assertThat(httpRequest.getHttpHeaders().getHeader())
+        assertThat(httpRequest.getHttpHeader())
                 .contains(Map.entry("Connection", "keep-alive"))
                 .contains(Map.entry("Accept", "*/*"))
                 .contains(Map.entry("Host", "localhost:8080"));
-        assertThat(httpRequest.getHttpRequestLine().getProtocol())
+        assertThat(httpRequest.getProtocol())
                 .isEqualTo("HTTP/1.1");
     }
 }

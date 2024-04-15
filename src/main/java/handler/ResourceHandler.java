@@ -31,6 +31,6 @@ public class ResourceHandler implements Handler {
 			path = TEMPLATE_RESOURCE_PATH;
 		}
 
-		return path + httpRequest.getHttpRequestLine().getPath();
+		return path + httpRequest.getPath();
 	}
 }
