@@ -29,7 +29,7 @@ public class APIHandler implements Handler {
 			return (HttpResponse)method.invoke(this, httpRequest);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			return HttpResponse.internalServerError(EMPTY_ERROR_MESSAGE);
+			return HttpResponse.internalServerError();
 		}
 	}
 
@@ -56,6 +56,6 @@ public class APIHandler implements Handler {
 		}
 		DataBase.addUser(new User(userId, password, name, email));
 
-		return HttpResponse.found("http://localhost:8080/index.html");
+		return HttpResponse.found("/index.html");
 	}
 }

@@ -44,8 +44,8 @@ public class HttpResponse {
 			new HttpResponseBody(errorMessage));
 	}
 
-	public static HttpResponse internalServerError(String errorMessage) {
-		return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, new HttpHeader(), new HttpResponseBody(errorMessage));
+	public static HttpResponse internalServerError() {
+		return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, new HttpHeader(), new HttpResponseBody());
 	}
 
 	public static HttpResponse staticResource(HttpResponseBody httpResponseBody, MIME mime) {
