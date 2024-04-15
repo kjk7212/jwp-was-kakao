@@ -48,7 +48,7 @@ public class HttpResponse {
 		return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, new HttpHeader(), new HttpResponseBody());
 	}
 
-	public static HttpResponse staticResource(HttpResponseBody httpResponseBody, MIME mime) {
+	public static HttpResponse staticResource(HttpResponseBody httpResponseBody, Mime mime) {
 		Map<String, String> headers = Map.of(HEADER_CONTENT_TYPE, mime.contentType, HEADER_CONTENT_LENGTH,
 			Integer.toString(httpResponseBody.getLength()));
 		return new HttpResponse(HttpStatus.OK, new HttpHeader(headers), httpResponseBody);

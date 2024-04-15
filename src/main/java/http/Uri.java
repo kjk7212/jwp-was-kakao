@@ -4,13 +4,13 @@ import exceptions.HttpRequestFormatException;
 
 import java.util.Map;
 
-public class URI {
+public class Uri {
 	private static final String EXTENSION_SEPARATOR = ".";
 
 	private final String path;
 	private final Map<String, String> parameters;
 
-	public URI(String path, Map<String, String> parameters) {
+	public Uri(String path, Map<String, String> parameters) {
 		validatePathFormat(path);
 		this.path = path;
 		this.parameters = parameters;
@@ -34,8 +34,8 @@ public class URI {
 		return path.contains(EXTENSION_SEPARATOR);
 	}
 
-	public MIME getMime() {
-		return MIME.findMimeFromExtension(getExtensionFromPath());
+	public Mime getMime() {
+		return Mime.findFromExtension(getExtensionFromPath());
 	}
 
 	private String getExtensionFromPath() {
