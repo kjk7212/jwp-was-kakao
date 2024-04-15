@@ -28,7 +28,6 @@ public class RequestHandler implements Runnable {
 			HttpRequest httpRequest = HttpRequest.createHttpRequestFromInputStream(in);
 
 			Handler handler = apiHandler;
-			;
 			if (httpRequest.isStaticResource()) {
 				handler = resourceHandler;
 			}
