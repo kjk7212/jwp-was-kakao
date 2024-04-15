@@ -3,6 +3,7 @@ package parser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +40,6 @@ public class HttpRequestParser {
 		this.httpBodyParsingStrategy = null;
 	}
 
-	private HttpRequestBody parseHttpBody(String bodyString) {
-		return httpBodyParsingStrategy.parse(bodyString);
-	}
-
 	public HttpRequestLine parseHttpRequestLine() throws IOException {
 		String[] requestLine = this.bufferedReader.readLine().split(SPACE);
 		HttpMethod httpMethod = HttpMethod.valueOf(requestLine[HTTP_METHOD_LOCATION]);
@@ -76,14 +73,19 @@ public class HttpRequestParser {
 		throw new IllegalArgumentException("지원되지 않는 컨텐츠타입입니다.");
 	}
 
+	private HttpRequestBody parseHttpBody(String bodyString) {
+		return httpBodyParsingStrategy.parse(bodyString);
+	}
+
 	private URI makeURIFromPath(String path) {
-		Map<String, String> parameters = new HashMap<>();
 		if (hasQuery(path)) {
 			int queryStartIndex = path.indexOf(QUERY_SEPARATOR);
 			path = path.substring(0, queryStartIndex);
-			parameters = parseParameters(path);
+			Map<String, String> parameters = parseParameters(path);
+
+			return new URI(path, parameters);
 		}
-		return new URI(path, parameters);
+		return new URI(path, Collections.emptyMap());
 	}
 
 	private boolean hasQuery(String path) {
