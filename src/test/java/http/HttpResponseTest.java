@@ -47,7 +47,7 @@ class HttpResponseTest {
 	@Test
 	@DisplayName("500 응답 생성테스트")
 	void internalServerError() {
-		assertThat(HttpResponse.internalServerError("").getHttpStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+		assertThat(HttpResponse.internalServerError().getHttpStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@Test
