@@ -6,7 +6,7 @@ import http.HttpResponseBody;
 import utils.FileIoUtils;
 import http.HttpRequest;
 import http.HttpResponse;
-import http.MIME;
+import http.Mime;
 
 public class ResourceHandler implements Handler {
 	private static final String STATIC_RESOURCE_PATH = "./static";
@@ -14,7 +14,7 @@ public class ResourceHandler implements Handler {
 
 	public HttpResponse handle(HttpRequest httpRequest) {
 		try {
-			MIME mime = httpRequest.getMime();
+			Mime mime = httpRequest.getMime();
 			String path = getResourcePath(httpRequest, mime);
 
 			byte[] body = FileIoUtils.loadFileFromClasspath(path);
@@ -25,7 +25,7 @@ public class ResourceHandler implements Handler {
 		}
 	}
 
-	private String getResourcePath(HttpRequest httpRequest, MIME mime) {
+	private String getResourcePath(HttpRequest httpRequest, Mime mime) {
 		String path = STATIC_RESOURCE_PATH;
 		if (mime.isTemplate()) {
 			path = TEMPLATE_RESOURCE_PATH;

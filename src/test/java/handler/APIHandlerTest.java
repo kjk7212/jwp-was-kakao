@@ -1,12 +1,10 @@
 package handler;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
 import java.util.Map;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +15,7 @@ import http.HttpRequestBody;
 import http.HttpRequestLine;
 import http.HttpResponse;
 import http.HttpStatus;
-import http.URI;
+import http.Uri;
 
 class APIHandlerTest {
 
@@ -26,19 +24,19 @@ class APIHandlerTest {
 	void handle() {
 		HttpRequest httpRequest = new HttpRequest(
 			new HttpRequestLine(
-				new URI("/", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
+				new Uri("/", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
 			new HttpHeader(),
 			new HttpRequestBody());
 
 		HttpRequest httpRequest2 = new HttpRequest(
 			new HttpRequestLine(
-				new URI("/test", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
+				new Uri("/test", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
 			new HttpHeader(),
 			new HttpRequestBody());
 
 		HttpRequest httpRequest3 = new HttpRequest(
 			new HttpRequestLine(
-				new URI("/user/create", Collections.emptyMap()), HttpMethod.POST, "HTTP/1.1"),
+				new Uri("/user/create", Collections.emptyMap()), HttpMethod.POST, "HTTP/1.1"),
 			new HttpHeader(),
 			new HttpRequestBody(Map.of()));
 
@@ -57,7 +55,7 @@ class APIHandlerTest {
 	void redirectToIndex() {
 		HttpRequest httpRequest = new HttpRequest(
 			new HttpRequestLine(
-				new URI("/", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
+				new Uri("/", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
 			new HttpHeader(),
 			new HttpRequestBody());
 
@@ -73,7 +71,7 @@ class APIHandlerTest {
 
 		HttpRequest httpRequest3 = new HttpRequest(
 			new HttpRequestLine(
-				new URI("/user/create", Collections.emptyMap()), HttpMethod.POST, "HTTP/1.1"),
+				new Uri("/user/create", Collections.emptyMap()), HttpMethod.POST, "HTTP/1.1"),
 			new HttpHeader(),
 			new HttpRequestBody(Map.of("password", "password","name", "이동규","userId", "cu","email", "brainbackdoor@gmail.com")));
 

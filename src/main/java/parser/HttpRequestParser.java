@@ -13,7 +13,7 @@ import http.HttpHeader;
 import http.HttpMethod;
 import http.HttpRequestBody;
 import http.HttpRequestLine;
-import http.URI;
+import http.Uri;
 import utils.IOUtils;
 
 public class HttpRequestParser {
@@ -77,15 +77,15 @@ public class HttpRequestParser {
 		return httpBodyParsingStrategy.parse(bodyString);
 	}
 
-	private URI makeURIFromPath(String path) {
+	private Uri makeURIFromPath(String path) {
 		if (hasQuery(path)) {
 			int queryStartIndex = path.indexOf(QUERY_SEPARATOR);
 			path = path.substring(0, queryStartIndex);
 			Map<String, String> parameters = parseParameters(path);
 
-			return new URI(path, parameters);
+			return new Uri(path, parameters);
 		}
-		return new URI(path, Collections.emptyMap());
+		return new Uri(path, Collections.emptyMap());
 	}
 
 	private boolean hasQuery(String path) {

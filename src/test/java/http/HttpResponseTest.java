@@ -1,7 +1,6 @@
 package http;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,6 +52,6 @@ class HttpResponseTest {
 	@Test
 	@DisplayName("정적리소스 응답 생성테스트")
 	void staticResource() {
-		assertThat(HttpResponse.staticResource(new HttpResponseBody(),MIME.CSS).getHttpStatus()).isEqualTo(HttpStatus.OK);
+		assertThat(HttpResponse.staticResource(new HttpResponseBody(), Mime.CSS).getHttpStatus()).isEqualTo(HttpStatus.OK);
 	}
 }

@@ -3,11 +3,11 @@ package http;
 import java.util.Map;
 
 public class HttpRequestLine {
-	private final URI uri;
+	private final Uri uri;
 	private final HttpMethod httpMethod;
 	private final String protocol;
 
-	public HttpRequestLine(URI uri, HttpMethod httpMethod, String protocol) {
+	public HttpRequestLine(Uri uri, HttpMethod httpMethod, String protocol) {
 		this.uri = uri;
 		this.httpMethod = httpMethod;
 		this.protocol = protocol;
@@ -17,7 +17,7 @@ public class HttpRequestLine {
 		return uri.isStaticResource();
 	}
 
-	public MIME getMime() {
+	public Mime getMime() {
 		return uri.getMime();
 	}
 

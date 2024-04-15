@@ -3,7 +3,7 @@ package http;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public enum MIME {
+public enum Mime {
 	HTML("text/html", "html"),
 	CSS("text/css", "css"),
 	JS("application/javascript", "js"),
@@ -20,7 +20,7 @@ public enum MIME {
 	public final String contentType;
 	public final String extension;
 
-	MIME(String contentType, String extension) {
+	Mime(String contentType, String extension) {
 		this.contentType = contentType;
 		this.extension = extension;
 	}
@@ -30,10 +30,10 @@ public enum MIME {
 	}
 
 	public boolean isTemplate() {
-		return this.equals(MIME.HTML) || this.equals(MIME.TXT);
+		return this.equals(Mime.HTML) || this.equals(Mime.TXT);
 	}
 
-	public static MIME findMimeFromExtension(String extension) {
+	public static Mime findFromExtension(String extension) {
 		return Arrays.stream(values())
 			.filter(mime -> mime.getExtension().equals(extension))
 			.findFirst()

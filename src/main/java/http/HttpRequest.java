@@ -77,7 +77,7 @@ public class HttpRequest {
 		return httpRequestLine.isStaticResource();
 	}
 
-	public MIME getMime() {
+	public Mime getMime() {
 		return httpRequestLine.getMime();
 	}
 }

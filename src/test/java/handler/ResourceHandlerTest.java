@@ -14,7 +14,7 @@ import http.HttpRequestBody;
 import http.HttpRequestLine;
 import http.HttpResponse;
 import http.HttpStatus;
-import http.URI;
+import http.Uri;
 
 class ResourceHandlerTest {
 
@@ -24,7 +24,7 @@ class ResourceHandlerTest {
 		ResourceHandler resourceHandler = new ResourceHandler();
 		HttpResponse httpResponse = resourceHandler.handle(new HttpRequest(
 			new HttpRequestLine(
-				new URI("/index.html", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
+				new Uri("/index.html", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
 			new HttpHeader(),
 			new HttpRequestBody()));
 
@@ -37,7 +37,7 @@ class ResourceHandlerTest {
 		ResourceHandler resourceHandler = new ResourceHandler();
 		HttpResponse httpResponse = resourceHandler.handle(new HttpRequest(
 			new HttpRequestLine(
-				new URI("/index.htm", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
+				new Uri("/index.htm", Collections.emptyMap()), HttpMethod.GET, "HTTP/1.1"),
 			new HttpHeader(),
 			new HttpRequestBody()));
 
