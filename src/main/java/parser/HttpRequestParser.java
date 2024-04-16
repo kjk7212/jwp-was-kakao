@@ -40,7 +40,8 @@ public class HttpRequestParser {
 
 	public HttpRequestParser(BufferedReader bufferedReader) {
 		this.bufferedReader = bufferedReader;
-		this.httpBodyParsingStrategy = null;
+		//TODO : 알맞은 구현체를 찾아주는 추상계층 추가하기
+		this.httpBodyParsingStrategy = new FormUrlEncodedParsingStrategy();
 	}
 
 	public HttpRequestLine parseHttpRequestLine() throws IOException {
@@ -80,6 +81,10 @@ public class HttpRequestParser {
 		if (!(httpHeader.containsKey(HEADER_CONTENT_TYPE) && httpHeader.containsKey(HEADER_CONTENT_LENGTH))) {
 			return new HttpRequestBody();
 		}
+		//TODO : 알맞은 구현체를 찾아주는 추상계층 추가하기
+		int contentLength = Integer.parseInt(httpHeader.getValueByKey(HEADER_CONTENT_LENGTH));
+		return parseHttpBody(IOUtils.readData(bufferedReader, contentLength));
+		/*
 		if (CONTENT_TYPE_FORM.equals(httpHeader.getValueByKey(HEADER_CONTENT_TYPE))) {
 			this.httpBodyParsingStrategy = new FormUrlEncodedParsingStrategy();
 			int contentLength = Integer.parseInt(httpHeader.getValueByKey(HEADER_CONTENT_LENGTH));
