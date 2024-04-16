@@ -15,8 +15,11 @@ public class HttpHeader {
 
 	private final Map<String, String> header;
 
+	private final HttpCookie httpCookie;
+
 	public HttpHeader() {
 		this.header = new HashMap<>();
+		this.httpCookie = new HttpCookie();
 	}
 
 	public HttpHeader(Map<String, String> header) {
@@ -25,6 +28,16 @@ public class HttpHeader {
 			validateHeaderKey(key);
 		});
 		this.header = header;
+		this.httpCookie = new HttpCookie();
+	}
+
+	public HttpHeader(Map<String, String> header, HttpCookie httpCookie) {
+		header.forEach((key, value) -> {
+			validateHeaderValue(value);
+			validateHeaderKey(key);
+		});
+		this.header = header;
+		this.httpCookie = httpCookie;
 	}
 
 	public Map<String, String> getHeader() {
@@ -35,6 +48,10 @@ public class HttpHeader {
 		validateHeaderKey(headerKey);
 		validateHeaderValue(headerValue);
 		this.header.put(headerKey, headerValue);
+	}
+
+	public void makeCookieLogined(String userId){
+		this.httpCookie.setLoginSession(userId);
 	}
 
 	private void validateHeaderKey(String headerKey) {
@@ -59,7 +76,7 @@ public class HttpHeader {
 	}
 
 	public String makeHeaderLine(){
-		StringBuilder headerLine = new StringBuilder();
+		StringBuilder headerLine = new StringBuilder(httpCookie.makeCookieMessage());
 		for (String key : header.keySet()){
 			headerLine.append(makeHeaderToString(key, header.get(key)));
 		}
@@ -70,6 +87,14 @@ public class HttpHeader {
 	private String makeHeaderToString(String key, String value) {
 		String suffix = HEADER_CONTENT_TYPE.equals(key) ? ";charset=utf-8" : "";
 		return key + ": " + value + suffix + "\r\n";
+	}
+
+	public boolean hasCookie(){
+		return this.httpCookie.hasCookie();
+	}
+
+	public String getSessionId(){
+		return this.httpCookie.getSessionId();
 	}
 
 }

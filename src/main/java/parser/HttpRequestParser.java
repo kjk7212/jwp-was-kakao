@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import http.HttpCookie;
 import http.HttpHeader;
 import http.HttpMethod;
 import http.HttpRequestBody;
@@ -20,10 +21,12 @@ public class HttpRequestParser {
 	private static final String QUERY_SEPARATOR = "?";
 	private static final String SPACE = " ";
 	private static final String HEADER_SEPARATOR = ": ";
+	private static final String COOKIE_SEPARATOR = "; ";
 	private static final String PARAMETER_EQUAL_SIGN = "=";
 	private static final String HEADER_CONTENT_LENGTH = "Content-Length";
 	private static final String HEADER_CONTENT_TYPE = "Content-Type";
 	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+	private static final String COOKIE = "Cookie";
 
 	private static final int HTTP_METHOD_LOCATION = 0;
 	private static final int HTTP_PATH_LOCATION = 1;
@@ -50,15 +53,27 @@ public class HttpRequestParser {
 	}
 
 	public HttpHeader parseHttpHeader() throws IOException {
-		HttpHeader httpHeader = new HttpHeader();
+		Map<String, String> httpHeader = new HashMap<>();
 
 		String line;
 		while ((line = this.bufferedReader.readLine()) != null && !line.isEmpty()) {
 			String[] header = line.split(HEADER_SEPARATOR);
-			httpHeader.addHeader(header[KEY_LOCATION], header[VALUE_LOCATION]);
+			httpHeader.put(header[KEY_LOCATION], header[VALUE_LOCATION]);
 		}
 
-		return httpHeader;
+		if(httpHeader.containsKey(COOKIE)){
+			HttpCookie httpCookie = parseHttpCookie(httpHeader.get(COOKIE));
+			return new HttpHeader(httpHeader, httpCookie);
+		}
+
+		return new HttpHeader(httpHeader);
+	}
+
+	public HttpCookie parseHttpCookie(String cookieString) {
+		Map<String, String> cookieValue = Arrays.stream(cookieString.split(COOKIE_SEPARATOR))
+			.map(cookie -> cookie.split(PARAMETER_EQUAL_SIGN))
+			.collect(Collectors.toMap(cookie -> cookie[KEY_LOCATION], cookie -> cookie[VALUE_LOCATION]));
+		return new HttpCookie(cookieValue);
 	}
 
 	public HttpRequestBody parseHttpRequestBody(HttpHeader httpHeader) throws IOException {
@@ -70,7 +85,7 @@ public class HttpRequestParser {
 			int contentLength = Integer.parseInt(httpHeader.getValueByKey(HEADER_CONTENT_LENGTH));
 			return parseHttpBody(IOUtils.readData(bufferedReader, contentLength));
 		}
-		throw new IllegalArgumentException("지원되지 않는 컨텐츠타입입니다.");
+		throw new IllegalArgumentException("지원되지 않는 컨텐츠타입입니다.");*/
 	}
 
 	private HttpRequestBody parseHttpBody(String bodyString) {
