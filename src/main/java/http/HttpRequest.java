@@ -82,6 +82,18 @@ public class HttpRequest {
 		return httpRequestBody.getBody();
 	}
 
+	public boolean hasCookie(){
+		return httpHeader.hasCookie();
+	}
+
+	public String getSessionId(){
+		return httpHeader.getSessionId();
+	}
+
+	public String getFromBody(String key){
+		return this.httpRequestBody.getFromBody(key);
+	}
+
 	public boolean isStaticResource() {
 		return httpRequestLine.isStaticResource();
 	}

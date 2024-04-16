@@ -19,6 +19,7 @@ public class HttpRequestParserTest {
     @DisplayName("HTTP 문자열 HttpRequest 객체로 파싱 하는 테스트")
     void parsingAllInOneTest() throws IOException {
         String httpRequestString = "GET /index.html HTTP/1.1\n" +
+                "Cookie: JSESSIONID=12312341324; Path=/\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
                 "Accept: */*";
@@ -28,6 +29,8 @@ public class HttpRequestParserTest {
 
         assertThat(httpRequest.getHttpMethod())
                 .isEqualTo(HttpMethod.GET);
+        assertThat(httpRequest.getSessionId())
+            .isEqualTo("12312341324");
         assertThat(httpRequest.getHttpBody())
                 .isEqualTo(Map.of());
         assertThat(httpRequest.getPath())
