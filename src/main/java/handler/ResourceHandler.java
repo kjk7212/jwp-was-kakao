@@ -1,36 +1,47 @@
 package handler;
 
-import static constant.Constant.*;
+import java.io.IOException;
+import java.lang.reflect.Method;
 
-import http.HttpResponseBody;
-import utils.FileIoUtils;
+import service.ResourceService;
+import annotations.DynamicResourceMapping;
+import annotations.NeedAuthorized;
 import http.HttpRequest;
 import http.HttpResponse;
 import http.Mime;
+import mapper.DynamicResourceMapper;
 
 public class ResourceHandler implements Handler {
-	private static final String STATIC_RESOURCE_PATH = "./static";
-	private static final String TEMPLATE_RESOURCE_PATH = "./templates";
+	private static final DynamicResourceMapper dynamicResourceMapper = new DynamicResourceMapper();
+	private static final ResourceService resourceService = new ResourceService();
 
 	public HttpResponse handle(HttpRequest httpRequest) {
-		try {
-			Mime mime = httpRequest.getMime();
-			String path = getResourcePath(httpRequest, mime);
+		Mime mime = httpRequest.getMime();
+		String path = httpRequest.getPath();
 
-			byte[] body = FileIoUtils.loadFileFromClasspath(path);
-			return HttpResponse.staticResource(new HttpResponseBody(body), mime);
+		if (dynamicResourceMapper.notHasMapping(path)) {
+			return resourceService.getStaticResource(httpRequest, mime);
+		}
+
+		Method method = dynamicResourceMapper.getMethod(path);
+		try {
+			return (HttpResponse)method.invoke(this, httpRequest, mime);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			return HttpResponse.notFound(EMPTY_ERROR_MESSAGE);
+			return HttpResponse.internalServerError();
 		}
 	}
 
-	private String getResourcePath(HttpRequest httpRequest, Mime mime) {
-		String path = STATIC_RESOURCE_PATH;
-		if (mime.isTemplate()) {
-			path = TEMPLATE_RESOURCE_PATH;
-		}
+	@NeedAuthorized
+	@DynamicResourceMapping(path = "/user/list.html")
+	public HttpResponse getTemplateUserList(HttpRequest httpRequest, Mime mime) throws IOException {
+		return resourceService.getTemplateUserList(httpRequest,mime);
+	}
 
-		return path + httpRequest.getPath();
+
+	@NeedAuthorized
+	@DynamicResourceMapping(path = "/user/profile.html")
+	public HttpResponse getProfile(HttpRequest httpRequest, Mime mime) throws IOException {
+		return resourceService.getProfile(httpRequest,mime);
 	}
 }
