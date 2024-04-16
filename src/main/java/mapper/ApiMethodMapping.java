@@ -4,10 +4,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class APIHandlerMapping {
+public class ApiMethodMapping {
+	// TODO 더 좋은 매핑 방식 고민해보기
 	private final Map<String, Method> map;
 
-	public APIHandlerMapping() {
+	public ApiMethodMapping() {
 		this.map = new HashMap<>();
 	}
 
