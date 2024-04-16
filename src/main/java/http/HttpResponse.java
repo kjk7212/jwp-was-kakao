@@ -54,6 +54,11 @@ public class HttpResponse {
 		return new HttpResponse(HttpStatus.OK, new HttpHeader(headers), httpResponseBody);
 	}
 
+	public HttpResponse setCookieLogined(String userId) {
+		this.httpHeader.makeCookieLogined(userId);
+		return this;
+	}
+
 	public byte[] makeByteMessage() {
 		String header = httpStatus.makeStatusLine() + httpHeader.makeHeaderLine() + "\r\n";
 
