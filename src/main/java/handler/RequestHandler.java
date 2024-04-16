@@ -11,7 +11,7 @@ import http.HttpResponse;
 
 public class RequestHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-	private static final APIHandler apiHandler = new APIHandler();
+	private static final ApiHandler apiHandler = new ApiHandler();
 	private static final ResourceHandler resourceHandler = new ResourceHandler();
 
 	private final Socket connection;
@@ -21,8 +21,7 @@ public class RequestHandler implements Runnable {
 	}
 
 	public void run() {
-		logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-			connection.getPort());
+		logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
 		try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 			HttpRequest httpRequest = HttpRequest.createHttpRequestFromInputStream(in);

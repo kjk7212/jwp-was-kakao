@@ -18,4 +18,8 @@ public class HttpRequestBody {
 	public Map<String, String> getBody() {
 		return Collections.unmodifiableMap(body);
 	}
+
+	public String getFromBody(String key){
+		return body.get(key);
+	}
 }
