@@ -2,12 +2,14 @@ package handler;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import db.DataBase;
 import http.HttpHeader;
 import http.HttpMethod;
 import http.HttpRequest;
@@ -16,8 +18,9 @@ import http.HttpRequestLine;
 import http.HttpResponse;
 import http.HttpStatus;
 import http.Uri;
+import model.User;
 
-class APIHandlerTest {
+class ApiHandlerTest {
 
 	@Test
 	@DisplayName("각종 메소드 매핑 테스트")
@@ -40,7 +43,7 @@ class APIHandlerTest {
 			new HttpHeader(),
 			new HttpRequestBody(Map.of()));
 
-		APIHandler apiHandler = new APIHandler();
+		ApiHandler apiHandler = new ApiHandler();
 		HttpResponse httpResponse = apiHandler.handle(httpRequest);
 		HttpResponse httpResponse2 = apiHandler.handle(httpRequest2);
 		HttpResponse httpResponse3 = apiHandler.handle(httpRequest3);
@@ -59,7 +62,7 @@ class APIHandlerTest {
 			new HttpHeader(),
 			new HttpRequestBody());
 
-		APIHandler apiHandler = new APIHandler();
+		ApiHandler apiHandler = new ApiHandler();
 		HttpResponse httpResponse = apiHandler.handle(httpRequest);
 
 		assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
@@ -75,9 +78,30 @@ class APIHandlerTest {
 			new HttpHeader(),
 			new HttpRequestBody(Map.of("password", "password","name", "이동규","userId", "cu","email", "brainbackdoor@gmail.com")));
 
-		APIHandler apiHandler = new APIHandler();
+		ApiHandler apiHandler = new ApiHandler();
 		HttpResponse httpResponse3 = apiHandler.handle(httpRequest3);
 
 		assertThat(httpResponse3.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
+	}
+
+
+	@Test
+	@DisplayName("로그인 테스트")
+	void login() {
+		User user = new User("123", "123", "123", "123");
+		DataBase.addUser(user);
+
+		HttpRequest httpRequest3 = new HttpRequest(
+			new HttpRequestLine(
+				new Uri("/user/login", Collections.emptyMap()), HttpMethod.POST, "HTTP/1.1"),
+			new HttpHeader(),
+			new HttpRequestBody(Map.of("password", "123","userId", "123")));
+
+		ApiHandler apiHandler = new ApiHandler();
+		HttpResponse httpResponse3 = apiHandler.handle(httpRequest3);
+
+		assertThat(httpResponse3.getHttpStatus()).isEqualTo(HttpStatus.FOUND);
+		assertThat(new String(httpResponse3.makeByteMessage(), StandardCharsets.UTF_8)).contains("Set-Cookie");
+
 	}
 }
