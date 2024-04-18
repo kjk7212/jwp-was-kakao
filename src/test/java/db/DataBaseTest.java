@@ -12,6 +12,7 @@ import model.User;
 class DataBaseTest {
 	@BeforeEach
 	void setUp() {
+		DataBase.deleteAll();
 		DataBase.addUser(new User("test","test","test","test"));
 		DataBase.addUser(new User("test1","test2","test3","test4"));
 		DataBase.addUser(new User("test3","test2","test3","test4"));

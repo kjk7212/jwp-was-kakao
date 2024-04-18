@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,11 @@ import http.Uri;
 import model.User;
 
 class ApiHandlerTest {
+
+	@BeforeEach
+	void setUp() {
+		DataBase.deleteAll();
+	}
 
 	@Test
 	@DisplayName("각종 메소드 매핑 테스트")

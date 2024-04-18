@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +24,10 @@ import model.User;
 class ApiServiceTest {
 	ApiService apiService = new ApiService();
 
+	@BeforeEach
+	void setUp() {
+		DataBase.deleteAll();
+	}
 
 	@Test
 	@DisplayName("리다이렉트 테스트")

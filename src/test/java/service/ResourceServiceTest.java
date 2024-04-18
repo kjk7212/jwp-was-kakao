@@ -27,6 +27,7 @@ class ResourceServiceTest {
 
 	@BeforeEach
 	void setUp() {
+		DataBase.deleteAll();
 		User user = new User("123", "123", "123", "123");
 		DataBase.addUser(user);
 	}
