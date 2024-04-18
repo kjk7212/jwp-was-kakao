@@ -12,7 +12,6 @@ import handler.ApiHandler;
 import http.HttpMethod;
 
 public class ApiMapper {
-	// TODO 더 좋은 매핑 방식 고민해보기
 	private static final Map<HttpMethod, ApiMethodMapping> ApiMappings;
 
 	static {

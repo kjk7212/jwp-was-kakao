@@ -24,8 +24,6 @@ public class HttpRequestParser {
 	private static final String COOKIE_SEPARATOR = "; ";
 	private static final String PARAMETER_EQUAL_SIGN = "=";
 	private static final String HEADER_CONTENT_LENGTH = "Content-Length";
-	private static final String HEADER_CONTENT_TYPE = "Content-Type";
-	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String COOKIE = "Cookie";
 
 	private static final int HTTP_METHOD_LOCATION = 0;
@@ -40,7 +38,6 @@ public class HttpRequestParser {
 
 	public HttpRequestParser(BufferedReader bufferedReader) {
 		this.bufferedReader = bufferedReader;
-		//TODO : 알맞은 구현체를 찾아주는 추상계층 추가하기
 		this.httpBodyParsingStrategy = new FormUrlEncodedParsingStrategy();
 	}
 
@@ -62,7 +59,7 @@ public class HttpRequestParser {
 			httpHeader.put(header[KEY_LOCATION], header[VALUE_LOCATION]);
 		}
 
-		if(httpHeader.containsKey(COOKIE)){
+		if (httpHeader.containsKey(COOKIE)) {
 			HttpCookie httpCookie = parseHttpCookie(httpHeader.get(COOKIE));
 			return new HttpHeader(httpHeader, httpCookie);
 		}
@@ -78,23 +75,14 @@ public class HttpRequestParser {
 	}
 
 	public HttpRequestBody parseHttpRequestBody(HttpHeader httpHeader) throws IOException {
-		if (!(httpHeader.containsKey(HEADER_CONTENT_TYPE) && httpHeader.containsKey(HEADER_CONTENT_LENGTH))) {
-			return new HttpRequestBody();
-		}
-		//TODO : 알맞은 구현체를 찾아주는 추상계층 추가하기
-		int contentLength = Integer.parseInt(httpHeader.getValueByKey(HEADER_CONTENT_LENGTH));
-		return parseHttpBody(IOUtils.readData(bufferedReader, contentLength));
-		/*
-		if (CONTENT_TYPE_FORM.equals(httpHeader.getValueByKey(HEADER_CONTENT_TYPE))) {
-			this.httpBodyParsingStrategy = new FormUrlEncodedParsingStrategy();
-			int contentLength = Integer.parseInt(httpHeader.getValueByKey(HEADER_CONTENT_LENGTH));
-			return parseHttpBody(IOUtils.readData(bufferedReader, contentLength));
-		}
-		throw new IllegalArgumentException("지원되지 않는 컨텐츠타입입니다.");*/
-	}
+		httpBodyParsingStrategy = ParsingStrategyFactory.getParsingStrategy(httpHeader);
 
-	private HttpRequestBody parseHttpBody(String bodyString) {
-		return httpBodyParsingStrategy.parse(bodyString);
+		if (httpHeader.containsKey(HEADER_CONTENT_LENGTH)) {
+			int contentLength = Integer.parseInt(httpHeader.getValueByKey(HEADER_CONTENT_LENGTH));
+			return httpBodyParsingStrategy.parse(IOUtils.readData(bufferedReader, contentLength));
+		}
+
+		return httpBodyParsingStrategy.parse("");
 	}
 
 	private Uri makeURIFromPath(String path) {

@@ -74,7 +74,6 @@ public class ResourceService {
 		Handlebars handlebars = new Handlebars(loader);
 
 		Template template = handlebars.compile(DYNAMIC_RESOURCE_USER_PROFILE);
-		System.out.println(template.apply(user));
 		HttpResponseBody httpResponseBody = new HttpResponseBody(template.apply(user));
 
 		return HttpResponse.staticResource(httpResponseBody, httpRequest.getMime());
