@@ -28,8 +28,9 @@ public class ResourceService {
 	private static final String DYNAMIC_RESOURCE_USER_LIST = "user/list";
 	private static final String DYNAMIC_RESOURCE_USER_PROFILE = "user/profile";
 
-	public HttpResponse getStaticResource(HttpRequest httpRequest, Mime mime){
+	public HttpResponse getStaticResource(HttpRequest httpRequest){
 		try {
+			Mime mime = httpRequest.getMime();
 			byte[] body = FileIoUtils.loadFileFromClasspath(getResourcePath(httpRequest, mime));
 			return HttpResponse.staticResource(new HttpResponseBody(body), mime);
 		} catch (Exception e) {
@@ -49,7 +50,7 @@ public class ResourceService {
 
 	//----------------------------------------------------------------------------------
 
-	public HttpResponse getTemplateUserList(HttpRequest httpRequest, Mime mime) throws IOException {
+	public HttpResponse getTemplateUserList(HttpRequest httpRequest) throws IOException {
 		Collection<User> users = DataBase.findAll();
 
 		TemplateLoader loader = new ClassPathTemplateLoader();
@@ -60,11 +61,11 @@ public class ResourceService {
 		Template template = handlebars.compile(DYNAMIC_RESOURCE_USER_LIST);
 		HttpResponseBody httpResponseBody = new HttpResponseBody(template.apply(users));
 
-		return HttpResponse.staticResource(httpResponseBody, mime);
+		return HttpResponse.staticResource(httpResponseBody, httpRequest.getMime());
 	}
 
 
-	public HttpResponse getProfile(HttpRequest httpRequest, Mime mime) throws IOException {
+	public HttpResponse getProfile(HttpRequest httpRequest) throws IOException {
 		User user = DataBase.findUserById(SessionStorage.findSession(httpRequest.getSessionId()).getUserId());
 
 		TemplateLoader loader = new ClassPathTemplateLoader();
@@ -76,6 +77,6 @@ public class ResourceService {
 		System.out.println(template.apply(user));
 		HttpResponseBody httpResponseBody = new HttpResponseBody(template.apply(user));
 
-		return HttpResponse.staticResource(httpResponseBody, mime);
+		return HttpResponse.staticResource(httpResponseBody, httpRequest.getMime());
 	}
 }

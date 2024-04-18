@@ -41,7 +41,7 @@ class ResourceServiceTest {
 			new HttpHeader(),
 			new HttpRequestBody());
 
-		assertThat(new String(resourceService.getTemplateUserList(httpRequest, Mime.HTML).makeByteMessage(), StandardCharsets.UTF_8)).contains("123");
+		assertThat(new String(resourceService.getTemplateUserList(httpRequest).makeByteMessage(), StandardCharsets.UTF_8)).contains("123");
 
 	}
 
@@ -58,7 +58,7 @@ class ResourceServiceTest {
 			httpHeader,
 			new HttpRequestBody());
 
-		assertThat(new String(resourceService.getProfile(httpRequest, Mime.HTML).makeByteMessage(), StandardCharsets.UTF_8)).contains("123");
+		assertThat(new String(resourceService.getProfile(httpRequest).makeByteMessage(), StandardCharsets.UTF_8)).contains("123");
 
 	}
 }
