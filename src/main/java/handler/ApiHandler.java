@@ -12,6 +12,9 @@ import http.HttpResponse;
 import java.lang.reflect.Method;
 
 public class ApiHandler implements Handler {
+	private static final String INDEX_URL = "/index.html";
+	private static final String USER_LIST_URL = "/user/list.html";
+
 	private static final ApiMapper apiMapper = new ApiMapper();
 	public static final ApiService apiService = new ApiService();
 
@@ -34,7 +37,12 @@ public class ApiHandler implements Handler {
 
 	@ApiMapping(path = "/", httpMethod = HttpMethod.GET)
 	public HttpResponse redirectToIndex(HttpRequest httpRequest) {
-		return apiService.redirectToIndex(httpRequest);
+		return apiService.redirectTo(INDEX_URL);
+	}
+
+	@ApiMapping(path = "/user/list", httpMethod = HttpMethod.GET)
+	public HttpResponse redirectToUserList(HttpRequest httpRequest) {
+		return apiService.redirectTo(USER_LIST_URL);
 	}
 
 	@ApiMapping(path = "/user/create", httpMethod = HttpMethod.POST)

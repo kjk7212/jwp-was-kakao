@@ -6,8 +6,8 @@ import http.HttpResponse;
 import model.User;
 
 public class ApiService {
-	public HttpResponse redirectToIndex(HttpRequest httpRequest) {
-		return HttpResponse.movedPermanently("/index.html");
+	public HttpResponse redirectTo(String redirectUrl) {
+		return HttpResponse.movedPermanently(redirectUrl);
 	}
 
 	public HttpResponse saveUserFromBody(HttpRequest httpRequest) {

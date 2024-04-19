@@ -38,7 +38,7 @@ class ApiServiceTest {
 			new HttpHeader(),
 			new HttpRequestBody());
 
-		HttpResponse httpResponse = apiService.redirectToIndex(httpRequest);
+		HttpResponse httpResponse = apiService.redirectTo("/index.html");
 
 		assertThat(httpResponse.getHttpStatus()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
 	}
