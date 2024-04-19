@@ -5,11 +5,7 @@ import static constant.Constant.*;
 import java.io.IOException;
 import java.util.Collection;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-
+import Renderer.DynamicTemplateRenderer;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
@@ -23,10 +19,10 @@ public class ResourceService {
 	private static final String STATIC_RESOURCE_PATH = "./static";
 	private static final String TEMPLATE_RESOURCE_PATH = "./templates";
 
-	private static final String DYNAMIC_RESOURCE_PREFIX = "/templates";
-	private static final String DYNAMIC_RESOURCE_SUFFIX = ".html";
 	private static final String DYNAMIC_RESOURCE_USER_LIST = "user/list";
 	private static final String DYNAMIC_RESOURCE_USER_PROFILE = "user/profile";
+
+	private static final DynamicTemplateRenderer dynamicTemplateRenderer = new DynamicTemplateRenderer();
 
 	public HttpResponse getStaticResource(HttpRequest httpRequest){
 		try {
@@ -48,33 +44,16 @@ public class ResourceService {
 		return path + httpRequest.getPath();
 	}
 
-	//----------------------------------------------------------------------------------
-
 	public HttpResponse getTemplateUserList(HttpRequest httpRequest) throws IOException {
 		Collection<User> users = DataBase.findAll();
-
-		TemplateLoader loader = new ClassPathTemplateLoader();
-		loader.setPrefix(DYNAMIC_RESOURCE_PREFIX);
-		loader.setSuffix(DYNAMIC_RESOURCE_SUFFIX);
-		Handlebars handlebars = new Handlebars(loader);
-
-		Template template = handlebars.compile(DYNAMIC_RESOURCE_USER_LIST);
-		HttpResponseBody httpResponseBody = new HttpResponseBody(template.apply(users));
+		HttpResponseBody httpResponseBody = dynamicTemplateRenderer.render(DYNAMIC_RESOURCE_USER_LIST, users);
 
 		return HttpResponse.staticResource(httpResponseBody, httpRequest.getMime());
 	}
 
-
 	public HttpResponse getProfile(HttpRequest httpRequest) throws IOException {
 		User user = DataBase.findUserById(SessionStorage.findSession(httpRequest.getSessionId()).getUserId());
-
-		TemplateLoader loader = new ClassPathTemplateLoader();
-		loader.setPrefix(DYNAMIC_RESOURCE_PREFIX);
-		loader.setSuffix(DYNAMIC_RESOURCE_SUFFIX);
-		Handlebars handlebars = new Handlebars(loader);
-
-		Template template = handlebars.compile(DYNAMIC_RESOURCE_USER_PROFILE);
-		HttpResponseBody httpResponseBody = new HttpResponseBody(template.apply(user));
+		HttpResponseBody httpResponseBody = dynamicTemplateRenderer.render(DYNAMIC_RESOURCE_USER_PROFILE, user);
 
 		return HttpResponse.staticResource(httpResponseBody, httpRequest.getMime());
 	}
