@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class Uri {
 	private static final String EXTENSION_SEPARATOR = ".";
+	public static final String URL_PREFIX = "/";
 
 	private final String path;
 	private final Map<String, String> parameters;
@@ -17,7 +18,7 @@ public class Uri {
 	}
 
 	private void validatePathFormat(String path) {
-		if (!path.startsWith("/")) {
+		if (!path.startsWith(URL_PREFIX)) {
 			throw new HttpRequestFormatException("uri 형식이 올바르지 않습니다.");
 		}
 	}

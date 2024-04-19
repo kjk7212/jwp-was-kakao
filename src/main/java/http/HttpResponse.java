@@ -6,6 +6,7 @@ import java.util.Map;
 public class HttpResponse {
 	private static final String HEADER_CONTENT_LENGTH = "Content-Length";
 	private static final String HEADER_CONTENT_TYPE = "Content-Type";
+	public static final String HEADER_STRING_KEY_LOCATION = "Location";
 
 	private final HttpStatus httpStatus;
 	private final HttpHeader httpHeader;
@@ -18,12 +19,12 @@ public class HttpResponse {
 	}
 
 	public static HttpResponse movedPermanently(String redirectURI) {
-		return new HttpResponse(HttpStatus.MOVED_PERMANENTLY, new HttpHeader(Map.of("Location", redirectURI)),
+		return new HttpResponse(HttpStatus.MOVED_PERMANENTLY, new HttpHeader(Map.of(HEADER_STRING_KEY_LOCATION, redirectURI)),
 			new HttpResponseBody());
 	}
 
 	public static HttpResponse found(String redirectURI) {
-		return new HttpResponse(HttpStatus.FOUND, new HttpHeader(Map.of("Location", redirectURI)),
+		return new HttpResponse(HttpStatus.FOUND, new HttpHeader(Map.of(HEADER_STRING_KEY_LOCATION, redirectURI)),
 			new HttpResponseBody());
 	}
 
