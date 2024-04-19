@@ -2,14 +2,14 @@ package handler;
 
 import static constant.Constant.*;
 
-import service.ApiService;
+import java.lang.reflect.Method;
+
 import annotations.ApiMapping;
-import mapper.ApiMapper;
 import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
-
-import java.lang.reflect.Method;
+import mapper.ApiMapper;
+import service.ApiService;
 
 public class ApiHandler implements Handler {
 	private static final String INDEX_URL = "/index.html";

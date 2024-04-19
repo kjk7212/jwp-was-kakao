@@ -2,12 +2,10 @@ package parser;
 
 import static org.assertj.core.api.Assertions.*;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.util.Map;
 
-import parser.FormUrlEncodedParsingStrategy;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class FormUrlEncodedParsingStrategyTest {
     @Test

@@ -16,7 +16,6 @@ import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpRequestBody;
 import http.HttpRequestLine;
-import http.Mime;
 import http.Uri;
 import model.User;
 import session.SessionStorage;

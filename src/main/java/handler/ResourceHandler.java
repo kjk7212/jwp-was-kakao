@@ -3,13 +3,12 @@ package handler;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-import service.ResourceService;
 import annotations.DynamicResourceMapping;
 import annotations.NeedAuthorized;
 import http.HttpRequest;
 import http.HttpResponse;
-import http.Mime;
 import mapper.DynamicResourceMapper;
+import service.ResourceService;
 
 public class ResourceHandler implements Handler {
 	private static final DynamicResourceMapper dynamicResourceMapper = new DynamicResourceMapper();

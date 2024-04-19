@@ -1,7 +1,6 @@
 package http;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 

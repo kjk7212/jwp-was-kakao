@@ -2,13 +2,13 @@ package http;
 
 import static org.assertj.core.api.Assertions.*;
 
-import exceptions.HttpRequestFormatException;
+import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import exceptions.HttpRequestFormatException;
 
 class UriTest {
     Uri uri;
